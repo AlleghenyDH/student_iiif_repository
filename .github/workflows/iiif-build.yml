@@ -18,20 +18,28 @@ jobs:
         run: |
           npm install biiif
           
-          # This script tells Node to run biiif but ignore non-directory files
+          # This script manually triggers the build and handles the folder logic
           node -e "
           const { build } = require('biiif');
-          build('./iiif', 'https://alleghenydh.github.io/student_iiif_repository/').then(() => {
-            console.log('IIIF Build Complete');
-          }).catch(err => {
-            console.error(err);
-            process.exit(1);
-          });
+          const path = require('path');
+          
+          async function run() {
+            try {
+              // We target the individual manifest folder to avoid the root-level confusion
+              await build('./iiif/webb', 'https://alleghenydh.github.io/student_iiif_repository/webb');
+              console.log('Manifest built successfully');
+            } catch (err) {
+              console.error('Build failed:', err);
+              process.exit(1);
+            }
+          }
+          run();
           "
           
-          mkdir -p public
-          cp -r ./iiif/* public/
-          
+          mkdir -p public/webb
+          # Copy the results to public for deployment
+          cp -r ./iiif/webb/* public/webb/
+
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
