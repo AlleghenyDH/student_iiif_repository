@@ -11,39 +11,42 @@ jobs:
 
       - name: Manual Manifest Generation
         run: |
-          mkdir -p public/webb
+          mkdir -p public/webb/item
+          # Copy the image into the public folder
+          cp iiif/webb/item/Webb_Union.jpg public/webb/item/Webb_Union.jpg
+          
           node -e "
           const fs = require('fs');
           const repoBase = 'https://alleghenydh.github.io/student_iiif_repository';
           
           const manifest = {
-            '@context': 'http://iiif.io/api/presentation/2/context.json',
-            '@id': \`\${repoBase}/webb/index.json\`,
-            '@type': 'sc:Manifest',
-            'label': 'Webb Union',
-            'sequences': [
+            '@context': 'http://iiif.io/api/presentation/3/context.json',
+            'id': \`\${repoBase}/webb/index.json\`,
+            'type': 'Manifest',
+            'label': { 'en': [ 'Webb Union' ] },
+            'items': [
               {
-                '@type': 'sc:Sequence',
-                'canvases': [
+                'id': \`\${repoBase}/webb/canvas/1\`,
+                'type': 'Canvas',
+                'height': 1500,
+                'width': 2000,
+                'items': [
                   {
-                    '@id': \`\${repoBase}/webb/canvas/1\`,
-                    '@type': 'sc:Canvas',
-                    'width': 2000,
-                    'height': 2000,
-                    'label': 'p. 1',
-                    'images': [
+                    'id': \`\${repoBase}/webb/page/1\`,
+                    'type': 'AnnotationPage',
+                    'items': [
                       {
-                        '@id': \`\${repoBase}/webb/annotation/1\`,
-                        '@type': 'oa:Annotation',
-                        'motivation': 'sc:painting',
-                        'resource': {
-                          '@id': \`\${repoBase}/webb/item/Webb_Union.jpg\`,
-                          '@type': 'dctypes:Image',
+                        'id': \`\${repoBase}/webb/annotation/1\`,
+                        'type': 'Annotation',
+                        'motivation': 'painting',
+                        'body': {
+                          'id': \`\${repoBase}/webb/item/Webb_Union.jpg\`,
+                          'type': 'Image',
                           'format': 'image/jpeg',
-                          'width': 2000,
-                          'height': 2000
+                          'height': 1500,
+                          'width': 2000
                         },
-                        'on': \`\${repoBase}/webb/canvas/1\`
+                        'target': \`\${repoBase}/webb/canvas/1\`
                       }
                     ]
                   }
@@ -54,7 +57,6 @@ jobs:
 
           fs.writeFileSync('public/webb/index.json', JSON.stringify(manifest, null, 2));
           "
-          cp -r ./iiif/* public/
           touch public/.nojekyll
 
       - name: Deploy to GitHub Pages
