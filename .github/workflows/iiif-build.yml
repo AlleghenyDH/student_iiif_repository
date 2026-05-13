@@ -21,19 +21,11 @@ jobs:
           
           mkdir -p public
           
-          # DIAGNOSTIC: List what is inside iiif
-          echo "Checking iiif folder contents:"
-          ls -R iiif
+          # This line is the magic: it points specifically to the iiif folder in your root
+          node "$BIIIF_PATH" "./iiif" --out ./public --v2
           
-          # Run the build
-          node "$BIIIF_PATH" ./iiif --out ./public --v2
-          
-          # DIAGNOSTIC: Create a test file to FORCE the branch to save
-          echo "This is a test" > public/connection_test.txt
-          
-          # Show us what ended up in public
-          echo "Checking public folder contents:"
-          ls -R public
+          # Just to be safe, let's keep the test file for one more run
+          echo "Build successful" > public/build_report.txt
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
