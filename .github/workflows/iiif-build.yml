@@ -41,12 +41,7 @@ jobs:
                           '@type': 'dctypes:Image',
                           'format': 'image/jpeg',
                           'width': 2000,
-                          'height': 2000,
-                          'service': {
-                            '@context': 'http://iiif.io/api/image/2/context.json',
-                            '@id': \`\${repoBase}/webb/item/Webb_Union.jpg\`,
-                            'profile': 'http://iiif.io/api/image/2/level0.json'
-                          }
+                          'height': 2000
                         },
                         'on': \`\${repoBase}/webb/canvas/1\`
                       }
