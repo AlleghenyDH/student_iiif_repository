@@ -1,0 +1,37 @@
+{
+  "@context": "http://iiif.io/api/presentation/3/context.json",
+  "id": "https://alleghenydh.github.io/student_iiif_repository/webb/index.json",
+  "type": "Manifest",
+  "label": {
+    "en": [
+      "Webb Union"
+    ]
+  },
+  "items": [
+    {
+      "id": "https://alleghenydh.github.io/student_iiif_repository/webb/canvas/1",
+      "type": "Canvas",
+      "width": 1000,
+      "height": 1000,
+      "items": [
+        {
+          "id": "https://alleghenydh.github.io/student_iiif_repository/webb/page/1",
+          "type": "AnnotationPage",
+          "items": [
+            {
+              "id": "https://alleghenydh.github.io/student_iiif_repository/webb/anno/1",
+              "type": "Annotation",
+              "motivation": "painting",
+              "body": {
+                "id": "https://raw.githubusercontent.com/AlleghenyDH/student_iiif_repository/main/iiif/webb/item/Webb_Union.jpg",
+                "type": "Image",
+                "format": "image/jpeg"
+              },
+              "target": "https://alleghenydh.github.io/student_iiif_repository/webb/canvas/1"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
