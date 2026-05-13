@@ -9,17 +9,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
       - name: Manual Manifest Generation
         run: |
-          # 1. Create the webb folder in a public directory
           mkdir -p public/webb
-          
-          # 2. Use Node to write the index.json file directly
           node -e "
           const fs = require('fs');
           const manifest = {
@@ -31,8 +23,8 @@ jobs:
               {
                 'id': 'https://alleghenydh.github.io/student_iiif_repository/webb/canvas/1',
                 'type': 'Canvas',
-                'width': 1000,
-                'height': 1000,
+                'width': 2000,
+                'height': 2000,
                 'items': [
                   {
                     'id': 'https://alleghenydh.github.io/student_iiif_repository/webb/page/1',
@@ -43,9 +35,11 @@ jobs:
                         'type': 'Annotation',
                         'motivation': 'painting',
                         'body': {
-                          'id': 'https://raw.githubusercontent.com/AlleghenyDH/student_iiif_repository/main/iiif/webb/item/Webb_Union.jpg',
+                          'id': 'https://alleghenydh.github.io/student_iiif_repository/iiif/webb/item/Webb_Union.jpg',
                           'type': 'Image',
-                          'format': 'image/jpeg'
+                          'format': 'image/jpeg',
+                          'width': 2000,
+                          'height': 2000
                         },
                         'target': 'https://alleghenydh.github.io/student_iiif_repository/webb/canvas/1'
                       }
@@ -56,10 +50,9 @@ jobs:
             ]
           };
           fs.writeFileSync('public/webb/index.json', JSON.stringify(manifest, null, 2));
-          console.log('Manifest written successfully!');
           "
-          
-          # 3. Double check the file is there
+          # This ensures the actual image file is also copied to the web server
+          cp -r ./iiif/* public/
           ls -R public
 
       - name: Deploy to GitHub Pages
