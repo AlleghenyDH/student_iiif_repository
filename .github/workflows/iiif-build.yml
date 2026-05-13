@@ -16,9 +16,10 @@ jobs:
 
       - name: Build IIIF
         run: |
-          # 1. Run biiif directly using npx with the explicit package name
-          # This creates the manifests inside a new 'output' folder
-          npx --package biiif biiif ./iiif --out ./output --v2
+          # 1. Ensure the output directory exists
+          mkdir -p output
+          # 2. Run the tool using the correct internal command name 'b-iiif'
+          npx --yes biiif ./iiif --out ./output --v2
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
