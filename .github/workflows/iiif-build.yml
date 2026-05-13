@@ -16,10 +16,11 @@ jobs:
 
       - name: Cleanup and Build
         run: |
-          # Remove any loose files in the iiif folder that cause crashes
+          # Ensure the directory exists
+          mkdir -p iiif
+          # Remove stray files that crash the tool (like .keep)
           find ./iiif -maxdepth 1 -type f -delete
-          
-          # Run the build
+          # Run biiif and show us everything it does
           npx biiif ./iiif --v2
 
       - name: Deploy to GitHub Pages
