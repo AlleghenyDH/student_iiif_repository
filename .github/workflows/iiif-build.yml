@@ -9,51 +9,26 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Manual Manifest Generation
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Generate Manifests
         run: |
-          mkdir -p public/webb
-          node -e "
-          const fs = require('fs');
-          const manifest = {
-            '@context': 'http://iiif.io/api/presentation/3/context.json',
-            'id': 'https://alleghenydh.github.io/student_iiif_repository/webb/index.json',
-            'type': 'Manifest',
-            'label': { 'en': [ 'Webb Union' ] },
-            'items': [
-              {
-                'id': 'https://alleghenydh.github.io/student_iiif_repository/webb/canvas/1',
-                'type': 'Canvas',
-                'width': 2000,
-                'height': 2000,
-                'items': [
-                  {
-                    'id': 'https://alleghenydh.github.io/student_iiif_repository/webb/page/1',
-                    'type': 'AnnotationPage',
-                    'items': [
-                      {
-                        'id': 'https://alleghenydh.github.io/student_iiif_repository/webb/anno/1',
-                        'type': 'Annotation',
-                        'motivation': 'painting',
-                        'body': {
-                          'id': 'https://alleghenydh.github.io/student_iiif_repository/iiif/webb/item/Webb_Union.jpg',
-                          'type': 'Image',
-                          'format': 'image/jpeg',
-                          'width': 2000,
-                          'height': 2000
-                        },
-                        'target': 'https://alleghenydh.github.io/student_iiif_repository/webb/canvas/1'
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          };
-          fs.writeFileSync('public/webb/index.json', JSON.stringify(manifest, null, 2));
-          "
-          # This ensures the actual image file is also copied to the web server
+          # 1. Install the tool
+          npm install -g iiif-manifest-generator
+          
+          # 2. Run the generator on the iiif folder
+          # This tool is smarter about images and won't throw the ENOTDIR error
+          iiif-manifest-generator ./iiif https://alleghenydh.github.io/student_iiif_repository/
+          
+          # 3. Create public and move the results
+          mkdir -p public
           cp -r ./iiif/* public/
-          ls -R public
+          
+          # 4. Diagnostic: Check if index.json exists
+          ls -R public/webb
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
