@@ -11,12 +11,14 @@ jobs:
 
       - name: Manual Manifest Generation
         run: |
-          mkdir -p public/webb/item
-          cp iiif/webb/item/Webb_Union.jpg public/webb/item/Webb_Union.jpg
-          
+          mkdir -p public/webb
           node -e "
           const fs = require('fs');
           const repoBase = 'https://alleghenydh.github.io/student_iiif_repository';
+          
+          // WE USE THE RAW LINK FOR THE IMAGE - Exhibit handles these better
+          const imageUrl = 'https://raw.githubusercontent.com/AlleghenyDH/student_iiif_repository/main/iiif/webb/item/Webb_Union.jpg';
+          
           const manifest = {
             '@context': 'http://iiif.io/api/presentation/3/context.json',
             'id': \`\${repoBase}/webb/index.json\`,
@@ -38,7 +40,7 @@ jobs:
                         'type': 'Annotation',
                         'motivation': 'painting',
                         'body': {
-                          'id': \`\${repoBase}/webb/item/Webb_Union.jpg\`,
+                          'id': imageUrl,
                           'type': 'Image',
                           'format': 'image/jpeg',
                           'height': 1500,
@@ -54,18 +56,8 @@ jobs:
           };
           fs.writeFileSync('public/webb/index.json', JSON.stringify(manifest, null, 2));
           "
-          
-          # --- THE SECRET SAUCE ---
-          # 1. Create .nojekyll to ensure folders aren't hidden
+          # We don't even need to copy the image to public if we use the RAW link!
           touch public/.nojekyll
-          
-          # 2. Create a headers file to allow Exhibit to talk to GitHub
-          # (Note: This works for some GitHub Pages setups)
-          echo '/*
-            Access-Control-Allow-Origin: *' > public/_headers
-          
-          # 3. Create a small HTML file just to make sure GitHub recognizes the site
-          echo "IIIF Repository Active" > public/index.html
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
