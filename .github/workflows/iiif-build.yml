@@ -14,13 +14,13 @@ jobs:
         with:
           node-version: '24'
 
-      - name: Debug Folder Structure
+      - name: Cleanup and Build
         run: |
-          echo "Listing files to verify structure:"
-          ls -R
-
-      - name: Run BIIIF
-        run: npx biiif ./iiif
+          # Remove any loose files in the iiif folder that cause crashes
+          find ./iiif -maxdepth 1 -type f -delete
+          
+          # Run the build
+          npx biiif ./iiif --v2
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
