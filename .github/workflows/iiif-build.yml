@@ -17,12 +17,22 @@ jobs:
       - name: Install and Generate
         run: |
           npm install biiif
-          # Find the tool
           BIIIF_PATH=$(find ./node_modules -name biiif -type f -executable -print -quit || find ./node_modules -name index.js -path "*/biiif/*" -print -quit)
-          # Run it directly into the 'public' folder
+          
           mkdir -p public
+          
+          # DIAGNOSTIC: List what is inside iiif
+          echo "Checking iiif folder contents:"
+          ls -R iiif
+          
+          # Run the build
           node "$BIIIF_PATH" ./iiif --out ./public --v2
-          # Ensure there is actually something in there
+          
+          # DIAGNOSTIC: Create a test file to FORCE the branch to save
+          echo "This is a test" > public/connection_test.txt
+          
+          # Show us what ended up in public
+          echo "Checking public folder contents:"
           ls -R public
 
       - name: Deploy to GitHub Pages
