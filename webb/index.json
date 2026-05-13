@@ -1,31 +1,35 @@
 {
-  "@context": "http://iiif.io/api/presentation/2/context.json",
-  "@id": "https://alleghenydh.github.io/student_iiif_repository/webb/index.json",
-  "@type": "sc:Manifest",
-  "label": "Webb Union",
-  "sequences": [
+  "@context": "http://iiif.io/api/presentation/3/context.json",
+  "id": "https://alleghenydh.github.io/student_iiif_repository/webb/index.json",
+  "type": "Manifest",
+  "label": {
+    "en": [
+      "Webb Union"
+    ]
+  },
+  "items": [
     {
-      "@type": "sc:Sequence",
-      "canvases": [
+      "id": "https://alleghenydh.github.io/student_iiif_repository/webb/canvas/1",
+      "type": "Canvas",
+      "height": 1500,
+      "width": 2000,
+      "items": [
         {
-          "@id": "https://alleghenydh.github.io/student_iiif_repository/webb/canvas/1",
-          "@type": "sc:Canvas",
-          "width": 2000,
-          "height": 2000,
-          "label": "p. 1",
-          "images": [
+          "id": "https://alleghenydh.github.io/student_iiif_repository/webb/page/1",
+          "type": "AnnotationPage",
+          "items": [
             {
-              "@id": "https://alleghenydh.github.io/student_iiif_repository/webb/annotation/1",
-              "@type": "oa:Annotation",
-              "motivation": "sc:painting",
-              "resource": {
-                "@id": "https://alleghenydh.github.io/student_iiif_repository/webb/item/Webb_Union.jpg",
-                "@type": "dctypes:Image",
+              "id": "https://alleghenydh.github.io/student_iiif_repository/webb/annotation/1",
+              "type": "Annotation",
+              "motivation": "painting",
+              "body": {
+                "id": "https://alleghenydh.github.io/student_iiif_repository/webb/item/Webb_Union.jpg",
+                "type": "Image",
                 "format": "image/jpeg",
-                "width": 2000,
-                "height": 2000
+                "height": 1500,
+                "width": 2000
               },
-              "on": "https://alleghenydh.github.io/student_iiif_repository/webb/canvas/1"
+              "target": "https://alleghenydh.github.io/student_iiif_repository/webb/canvas/1"
             }
           ]
         }
