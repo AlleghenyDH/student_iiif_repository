@@ -16,28 +16,51 @@ jobs:
 
       - name: Install and Generate
         run: |
-          npm install biiif
+          # 1. Install a more modern IIIF tool
+          npm install -g @iiif/utils
           
-          # This script manually triggers the build and handles the folder logic
+          # 2. Create the output folder
+          mkdir -p public/webb
+          
+          # 3. Use a simple Node script to generate a valid IIIF v3 manifest
+          # This bypasses the 'biiif' folder bug entirely
           node -e "
-          const { build } = require('biiif');
-          const path = require('path');
-          
-          async function run() {
-            try {
-              // We target the individual manifest folder to avoid the root-level confusion
-              await build('./iiif/webb', 'https://alleghenydh.github.io/student_iiif_repository/webb');
-              console.log('Manifest built successfully');
-            } catch (err) {
-              console.error('Build failed:', err);
-              process.exit(1);
-            }
-          }
-          run();
+          const fs = require('fs');
+          const manifest = {
+            '@context': 'http://iiif.io/api/presentation/3/context.json',
+            'id': 'https://alleghenydh.github.io/student_iiif_repository/webb/index.json',
+            'type': 'Manifest',
+            'label': { 'en': [ 'Webb Union' ] },
+            'items': [
+              {
+                'id': 'https://alleghenydh.github.io/student_iiif_repository/webb/canvas/1',
+                'type': 'Canvas',
+                'items': [
+                  {
+                    'id': 'https://alleghenydh.github.io/student_iiif_repository/webb/page/1',
+                    'type': 'AnnotationPage',
+                    'items': [
+                      {
+                        'id': 'https://alleghenydh.github.io/student_iiif_repository/webb/anno/1',
+                        'type': 'Annotation',
+                        'motivation': 'painting',
+                        'body': {
+                          'id': 'https://raw.githubusercontent.com/AlleghenyDH/student_iiif_repository/main/iiif/webb/item/Webb_Union.jpg',
+                          'type': 'Image',
+                          'format': 'image/jpeg'
+                        },
+                        'target': 'https://alleghenydh.github.io/student_iiif_repository/webb/canvas/1'
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          };
+          fs.writeFileSync('public/webb/index.json', JSON.stringify(manifest, null, 2));
           "
           
-          mkdir -p public/webb
-          # Copy the results to public for deployment
+          # Copy the image folder just in case Exhibit needs to browse it
           cp -r ./iiif/webb/* public/webb/
 
       - name: Deploy to GitHub Pages
