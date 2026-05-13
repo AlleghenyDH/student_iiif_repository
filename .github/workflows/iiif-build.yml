@@ -14,14 +14,14 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Build IIIF and Deploy
-        uses: IIIF-Commons/biiif-action@v2
-        with:
-          input: iiif
-          output: public
+      - name: Build IIIF
+        run: |
+          # 1. Run biiif directly using npx with the explicit package name
+          # This creates the manifests inside a new 'output' folder
+          npx --package biiif biiif ./iiif --out ./output --v2
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: public
+          folder: output
           branch: gh-pages
