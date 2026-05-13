@@ -14,17 +14,13 @@ jobs:
         with:
           node-version: '24'
 
-      - name: Install BIIIF
-        run: npm install -g biiif
-
-      - name: Cleanup and Build
+      - name: Generate IIIF
         run: |
-          # Ensure the directory exists
+          # Ensure folder exists and clean up loose files
           mkdir -p iiif
-          # Remove stray files that crash the tool
           find ./iiif -maxdepth 1 -type f -delete
-          # Run biiif using the installed global command
-          biiif ./iiif --v2
+          # Run the tool directly without global installation
+          npx biiif ./iiif --v2
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
