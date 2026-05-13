@@ -16,23 +16,22 @@ jobs:
 
       - name: Install and Generate
         run: |
-          # 1. Install the CLI version of the tool
+          # 1. Install CLI
           npm install -g biiif-cli
           
-          # 2. Create the output folder
+          # 2. Run biiif (No extra flags this time)
+          biiif ./iiif --url https://alleghenydh.github.io/student_iiif_repository/
+          
+          # 3. Prepare the public folder
           mkdir -p public
           
-          # 3. Run the CLI with your specific GitHub URL
-          # Replace 'AlleghenyDH' and 'student_iiif_repository' if they are different in your actual URL
-          biiif ./iiif -u https://alleghenydh.github.io/student_iiif_repository/ -v
-
-          # 4. Move the results to public
-          # Biiif usually puts a +tiles folder and index.json inside the source folder
-          # This command moves everything generated into our deploy folder
+          # 4. Copy the generated manifests and images to public
+          # We include the 'webb' folder and the top-level index.json
           cp -r ./iiif/* public/
           
-          # Final check: see if index.json actually exists now
-          ls -R public
+          # 5. Diagnostic: Let's see if the folder 'webb' contains a new .json file
+          echo "Checking if index.json was created in webb folder:"
+          ls -R public/webb
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
