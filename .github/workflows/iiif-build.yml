@@ -33,6 +33,7 @@ jobs:
                     'label': 'p. 1',
                     'images': [
                       {
+                        '@id': \`\${repoBase}/webb/annotation/1\`,
                         '@type': 'oa:Annotation',
                         'motivation': 'sc:painting',
                         'resource': {
@@ -40,7 +41,12 @@ jobs:
                           '@type': 'dctypes:Image',
                           'format': 'image/jpeg',
                           'width': 2000,
-                          'height': 2000
+                          'height': 2000,
+                          'service': {
+                            '@context': 'http://iiif.io/api/image/2/context.json',
+                            '@id': \`\${repoBase}/webb/item/Webb_Union.jpg\`,
+                            'profile': 'http://iiif.io/api/image/2/level0.json'
+                          }
                         },
                         'on': \`\${repoBase}/webb/canvas/1\`
                       }
@@ -53,9 +59,7 @@ jobs:
 
           fs.writeFileSync('public/webb/index.json', JSON.stringify(manifest, null, 2));
           "
-          # Copy images
           cp -r ./iiif/* public/
-          # CRITICAL: This bypasses GitHub's internal file processing
           touch public/.nojekyll
 
       - name: Deploy to GitHub Pages
