@@ -17,15 +17,20 @@ jobs:
       - name: Install and Generate
         run: |
           npm install biiif
-          BIIIF_PATH=$(find ./node_modules -name biiif -type f -executable -print -quit || find ./node_modules -name index.js -path "*/biiif/*" -print -quit)
           
+          # 1. VERIFY IMAGES EXIST (This will show up in your logs)
+          echo "Listing all files in the repository:"
+          find . -maxdepth 3 -not -path '*/.*'
+          
+          # 2. CREATE PUBLIC FOLDER
           mkdir -p public
           
-          # This line is the magic: it points specifically to the iiif folder in your root
-          node "$BIIIF_PATH" "./iiif" --out ./public --v2
+          # 3. RUN BIIIF (Using the absolute binary path)
+          ./node_modules/.bin/biiif ./iiif --out ./public --v2
           
-          # Just to be safe, let's keep the test file for one more run
-          echo "Build successful" > public/build_report.txt
+          # 4. FINAL CHECK
+          echo "What ended up in the public folder?"
+          ls -R public
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
