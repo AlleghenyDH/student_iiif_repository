@@ -14,12 +14,14 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Build IIIF
+      - name: Install BIIIF
+        run: npm install biiif
+
+      - name: Generate Manifests
         run: |
-          # 1. Ensure the output directory exists
           mkdir -p output
-          # 2. Run the tool using the correct internal command name 'b-iiif'
-          npx --yes biiif ./iiif --out ./output --v2
+          # This points directly to the logic file inside the folder we just installed
+          node ./node_modules/biiif/bin/biiif ./iiif --out ./output --v2
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
