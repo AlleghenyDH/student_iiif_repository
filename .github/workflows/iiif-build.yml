@@ -16,21 +16,14 @@ jobs:
 
       - name: Install and Generate
         run: |
+          # 1. Install the tool
           npm install biiif
           
-          # 1. VERIFY IMAGES EXIST (This will show up in your logs)
-          echo "Listing all files in the repository:"
-          find . -maxdepth 3 -not -path '*/.*'
-          
-          # 2. CREATE PUBLIC FOLDER
+          # 2. Create the output folder
           mkdir -p public
           
-          # 3. RUN BIIIF (Using the absolute binary path)
-          ./node_modules/.bin/biiif ./iiif --out ./public --v2
-          
-          # 4. FINAL CHECK
-          echo "What ended up in the public folder?"
-          ls -R public
+          # 3. Run the tool by pointing directly to its main file
+          node ./node_modules/biiif/index.js ./iiif --out ./public --v2
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
