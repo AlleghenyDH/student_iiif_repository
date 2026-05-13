@@ -12,15 +12,17 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '24'
+          node-version: '20'
 
-      - name: Generate IIIF
+      - name: Install and Run BIIIF
         run: |
-          # Ensure folder exists and clean up loose files
+          # 1. Force install the package so it is present
+          npm install biiif
+          # 2. Ensure folder exists and clean up loose files
           mkdir -p iiif
           find ./iiif -maxdepth 1 -type f -delete
-          # Run the tool directly without global installation
-          npx biiif ./iiif --v2
+          # 3. Run the tool using the direct path
+          ./node_modules/.bin/biiif ./iiif --v2
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
