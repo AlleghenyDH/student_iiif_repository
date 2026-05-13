@@ -14,16 +14,12 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Install and Generate
+      - name: Manual Manifest Generation
         run: |
-          # 1. Install a more modern IIIF tool
-          npm install -g @iiif/utils
-          
-          # 2. Create the output folder
+          # 1. Create the webb folder in a public directory
           mkdir -p public/webb
           
-          # 3. Use a simple Node script to generate a valid IIIF v3 manifest
-          # This bypasses the 'biiif' folder bug entirely
+          # 2. Use Node to write the index.json file directly
           node -e "
           const fs = require('fs');
           const manifest = {
@@ -35,6 +31,8 @@ jobs:
               {
                 'id': 'https://alleghenydh.github.io/student_iiif_repository/webb/canvas/1',
                 'type': 'Canvas',
+                'width': 1000,
+                'height': 1000,
                 'items': [
                   {
                     'id': 'https://alleghenydh.github.io/student_iiif_repository/webb/page/1',
@@ -58,10 +56,11 @@ jobs:
             ]
           };
           fs.writeFileSync('public/webb/index.json', JSON.stringify(manifest, null, 2));
+          console.log('Manifest written successfully!');
           "
           
-          # Copy the image folder just in case Exhibit needs to browse it
-          cp -r ./iiif/webb/* public/webb/
+          # 3. Double check the file is there
+          ls -R public
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
