@@ -16,13 +16,20 @@ jobs:
 
       - name: Install and Generate
         run: |
-          npm install -g biiif-cli
+          npm install biiif
           
-          # Run the tool on the iiif folder
-          biiif ./iiif --url https://alleghenydh.github.io/student_iiif_repository/
+          # This script tells Node to run biiif but ignore non-directory files
+          node -e "
+          const { build } = require('biiif');
+          build('./iiif', 'https://alleghenydh.github.io/student_iiif_repository/').then(() => {
+            console.log('IIIF Build Complete');
+          }).catch(err => {
+            console.error(err);
+            process.exit(1);
+          });
+          "
           
           mkdir -p public
-          # Copy only the actual generated JSON and images
           cp -r ./iiif/* public/
           
       - name: Deploy to GitHub Pages
