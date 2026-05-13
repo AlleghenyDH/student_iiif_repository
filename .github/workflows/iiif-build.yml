@@ -14,18 +14,14 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Install and Run BIIIF
-        run: |
-          # 1. Install the package locally
-          npm install biiif
-          # 2. Ensure folder exists and clean up loose files
-          mkdir -p iiif
-          find ./iiif -maxdepth 1 -type f -delete
-          # 3. Run the local version of the tool explicitly
-          node_modules/.bin/biiif ./iiif --v2
+      - name: Build IIIF and Deploy
+        uses: IIIF-Commons/biiif-action@v2
+        with:
+          input: iiif
+          output: public
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: iiif
+          folder: public
           branch: gh-pages
