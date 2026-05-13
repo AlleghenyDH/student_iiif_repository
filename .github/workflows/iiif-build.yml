@@ -14,14 +14,18 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Install BIIIF
-        run: npm install biiif
-
-      - name: Generate Manifests
+      - name: Install and Generate
         run: |
+          # 1. Install the tool
+          npm install biiif
+          
+          # 2. Find where the executable is hiding and save it as a variable
+          BIIIF_PATH=$(find ./node_modules -name biiif -type f -executable -print -quit || find ./node_modules -name index.js -path "*/biiif/*" -print -quit)
+          echo "Found biiif at: $BIIIF_PATH"
+          
+          # 3. Create output folder and run the tool
           mkdir -p output
-          # This points directly to the logic file inside the folder we just installed
-          node ./node_modules/biiif/bin/biiif ./iiif --out ./output --v2
+          node "$BIIIF_PATH" ./iiif --out ./output --v2
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
