@@ -12,13 +12,11 @@ jobs:
       - name: Manual Manifest Generation
         run: |
           mkdir -p public/webb/item
-          # Copy the image into the public folder
           cp iiif/webb/item/Webb_Union.jpg public/webb/item/Webb_Union.jpg
           
           node -e "
           const fs = require('fs');
           const repoBase = 'https://alleghenydh.github.io/student_iiif_repository';
-          
           const manifest = {
             '@context': 'http://iiif.io/api/presentation/3/context.json',
             'id': \`\${repoBase}/webb/index.json\`,
@@ -54,10 +52,20 @@ jobs:
               }
             ]
           };
-
           fs.writeFileSync('public/webb/index.json', JSON.stringify(manifest, null, 2));
           "
+          
+          # --- THE SECRET SAUCE ---
+          # 1. Create .nojekyll to ensure folders aren't hidden
           touch public/.nojekyll
+          
+          # 2. Create a headers file to allow Exhibit to talk to GitHub
+          # (Note: This works for some GitHub Pages setups)
+          echo '/*
+            Access-Control-Allow-Origin: *' > public/_headers
+          
+          # 3. Create a small HTML file just to make sure GitHub recognizes the site
+          echo "IIIF Repository Active" > public/index.html
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
