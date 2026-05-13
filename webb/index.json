@@ -23,7 +23,7 @@
               "type": "Annotation",
               "motivation": "painting",
               "body": {
-                "id": "https://alleghenydh.github.io/student_iiif_repository/webb/item/Webb_Union.jpg",
+                "id": "https://raw.githubusercontent.com/AlleghenyDH/student_iiif_repository/main/iiif/webb/item/Webb_Union.jpg",
                 "type": "Image",
                 "format": "image/jpeg",
                 "height": 1500,
